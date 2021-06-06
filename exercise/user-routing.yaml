@@ -1,0 +1,15 @@
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: reviews
+spec:
+  hosts:
+    - reviews
+  http:
+    - name: "Your-Own-V2-Rule"
+      ### TODO IMPLEMENT YOUR OWN RULE HERE
+    - name: "v1-route"
+      route:
+        - destination:
+            host: reviews
+            subset: v1

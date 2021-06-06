@@ -1,0 +1,36 @@
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: reviews
+spec:
+  hosts:
+    - reviews
+  http:
+    - name: "HB_Rule"
+      fault:
+        delay:
+          fixedDelay: 20s
+          percentage:
+            value: 50
+      timeout: 15s
+      retries:
+        attempts: 5
+        perTryTimeout: 5s
+      match:
+        - headers:
+            end-user:
+              regex: "HB.*"
+      route:
+        - destination:
+            host: reviews
+            subset: v2
+          weight: 90
+        - destination:
+            host: reviews
+            subset: v1
+          weight: 10
+    - name: "v1-route"
+      route:
+        - destination:
+            host: reviews
+            subset: v1

@@ -1,6 +1,21 @@
 # Lab-Kubernetes-Istio
 
-## Kubernetes
+## Kubernetes  
+Kubernetes (abbreviation: K8s) is an open-source platform that enables managing containerized workloads and services. The huge advantages of the project are  
+its portability, extensibility and flexibiliy. It very important to understand that k8s is not a standalone virtualization platform but rather an extremely  
+useful tool to orchestrate microservices virtualized using other sulotions (e.g. Docker). Kubernetes perfectly fits the ongoing IT trends aiming to refactor huge monolith  
+applications to smaller and easily handled separate functionalities wrapped in microservices. The most important and popular Kubernetes usages include:  
+* Service Discovery and load balancing -- balance load between multple containers present in a cluster and expose your application using either DNS or customised IP address,  
+* Storage orchestration -- make best use of different storge locations including local storages, cloud providers and more,  
+* Automated rollouts and rollbacks -- specify a desired version of your application across each container and be able to easily change it anytime you want, on a chosen machine inside a cluster  
+* Automatic bin packing -- make the best use of your resources and customize the usage per cluster  
+* Self-healing -- do not worry about containers availability. K8s replaces failed and non-responding continers for you and periodically runs health checks  
+* Secret and configuration management -- easily manage ssh passwords and certificates without the need to rebuild the container images and exposing sensitive information in your network stack  
+
+In the below picture the typical K8s cluster architecture is presented.  
+The most important thing to remember from it is that the cluster consists of worker machines (nodes). Each node is later divided into components of the application  
+workload (pods). The control plane usually spans across multiple computers within the cluster. Such infrastructure provides scalable and fault tolerant architcture.   
+![k8s architecture](k8s-components.svg)
 
 ## Istio
 

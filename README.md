@@ -5,12 +5,12 @@ Kubernetes (abbreviation: K8s) is an open-source platform that enables managing 
 its portability, extensibility and flexibiliy. It very important to understand that k8s is not a standalone virtualization platform but rather an extremely  
 useful tool to orchestrate microservices virtualized using other sulotions (e.g. Docker). Kubernetes perfectly fits the ongoing IT trends aiming to refactor huge monolith  
 applications to smaller and easily handled separate functionalities wrapped in microservices. The most important and popular Kubernetes usages include:  
-* Service Discovery and load balancing -- balance load between multple containers present in a cluster and expose your application using either DNS or customised IP address,  
-* Storage orchestration -- make best use of different storge locations including local storages, cloud providers and more,  
+* **Service Discovery and load balancing** -- balance load between multple containers present in a cluster and expose your application using either DNS or customised IP address,  
+* **Storage orchestration** -- make best use of different storge locations including local storages, cloud providers and more,  
 * Automated rollouts and rollbacks -- specify a desired version of your application across each container and be able to easily change it anytime you want, on a chosen machine inside a cluster  
-* Automatic bin packing -- make the best use of your resources and customize the usage per cluster  
-* Self-healing -- do not worry about containers availability. K8s replaces failed and non-responding continers for you and periodically runs health checks  
-* Secret and configuration management -- easily manage ssh passwords and certificates without the need to rebuild the container images and exposing sensitive information in your network stack  
+* **Automatic bin packing** -- make the best use of your resources and customize the usage per cluster  
+* **Self-healing** -- do not worry about containers availability. K8s replaces failed and non-responding continers for you and periodically runs health checks  
+* **Secret and configuration management** -- easily manage ssh passwords and certificates without the need to rebuild the container images and exposing sensitive information in your network stack  
 
 In the below picture the typical K8s cluster architecture is presented.  
 The most important thing to remember from it is that the cluster consists of worker machines (nodes). Each node is later divided into components of the application  
@@ -41,14 +41,22 @@ Control plane, checks the desired configuration and dynamically updates the prox
 rules.
 
 ## Tutorial
-Before continuing with the exercise, let's sum up what we have already learned about Istio and what it actually does under the hood. The concepts of the data and control planes were already introduced above so you should be familiar with them. Together they make a service mesh (introduced above as well). As such, Istio is an open source solution that can be merged with an existing codebase without the need of changing the code itself. The solution acts as a parent component to the whole infrastructure and makes it really easy to enforce security measures, A/B testing, observability, traffic management and so on to your application and everything is working almost out of the box. The great advantage is the dynamic configuration handled by the control plane (as .yaml config files) so you'll never have manually change each of the envoy proxies. The Istio's impact on the application can be visualized as shown in the image below.  
-![Istio impact on an app](service-mesh.svg)
+Before continuing with the exercise, let's sum up what we have already learned about Istio and what it actually does under the hood. The concepts of the data and control planes were already introduced above so you should be familiar with them. Together they make a service mesh (introduced above as well). As such, Istio is an open source solution that can be merged with an existing codebase without the need of changing the code itself. The solution acts as a parent component to the whole infrastructure and makes it really easy to enforce security measures, A/B testing, observability, traffic management and so on to your application and everything is working almost out of the box. 
+
+The great advantage is the dynamic configuration handled by the control plane (as _.yaml_ config files) so you'll never have manually change each of the envoy proxies. The Istio's impact on the application can be visualized as shown in the image below.  
+![Istio impact on an app](service-mesh.svg)  
+
 The following exercises are:  
-0. Set up your environment --- you will learn how to install minikube, kiali and Istio tools. Then you will launch an examplary application in order to verify that everything works as expected. 
-1. Request Routing --- you will have a cluster running different versions of your application. Based on various criteria specified later on you are going to implement rules that will change the way traffic is routed within you application. Some of the users will see version 1 of your app whereas the others will see different versions. 
-2. Fault Injection --- In this part of the exercise you are going to test whether you application is fault tolerant. You will use Istio's fault injection rules to introduce a delay to your application and find possible bugs and problems your customers may encounter. A healthy applciation means a happy customer!  
-3. Traffic Shifting --- The last part of this laboratory session will give you tools to seemlessly migrate your application between versions (e.g sequentially deploy a new version of the app). With Istio you can do it without having to manually rebuild and reboot all your containers within the cluster. In order to do so you are going to use envoy sidecar implementation and a feature called weighted roouting. By specyfing an appropriate rule you will have a given percentage of users routed to a different version of your app. If it works, you can deploy it across the whole cluster. Perfect! 
-Now that you know everything, ready your command line and get to work!
+1. **Set up your environment** --- you will learn how to install minikube, kiali and Istio tools. Then you will launch an examplary application in order to verify that everything works as expected.
+
+3. **Request Routing** --- you will have a cluster running different versions of your application. Based on various criteria specified later on you are going to implement rules that will change the way traffic is routed within you application. Some of the users will see version 1 of your app whereas the others will see different versions. 
+
+5. **Fault Injection** --- In this part of the exercise you are going to test whether you application is fault tolerant. You will use Istio's fault injection rules to introduce a delay to your application and find possible bugs and problems your customers may encounter. A healthy applciation means a happy customer!  
+
+7. **Traffic Shifting** --- The last part of this laboratory session will give you tools to seemlessly migrate your application between versions (e.g sequentially deploy a new version of the app). With Istio you can do it without having to manually rebuild and reboot all your containers within the cluster. In order to do so you are going to use envoy sidecar implementation and a feature called weighted roouting. By specyfing an appropriate rule you will have a given percentage of users routed to a different version of your app. If it works, you can deploy it across the whole cluster. Perfect! 
+Now that you know everything, ready your command line and get to work!  
+---
+
 ## Exercise
 
 For the exercise, we will be using the default application and the default tutorial provided by the Istio team.

@@ -3,10 +3,10 @@
 ## Kubernetes  
 Kubernetes (abbreviation: K8s) is an open-source platform that enables managing containerized workloads and services. The huge advantages of the project are  
 its portability, extensibility and flexibiliy. It very important to understand that k8s is not a standalone virtualization platform but rather an extremely  
-useful tool to orchestrate microservices virtualized using other sulotions (e.g. Docker). Kubernetes perfectly fits the ongoing IT trends aiming to refactor huge monolith  
+useful tool to orchestrate microservices virtualized using other solutions (e.g. Docker). Kubernetes perfectly fits the ongoing IT trends aiming to refactor huge monolith  
 applications to smaller and easily handled separate functionalities wrapped in microservices. The most important and popular Kubernetes usages include:  
-* **Service Discovery and load balancing** -- balance load between multple containers present in a cluster and expose your application using either DNS or customised IP address,  
-* **Storage orchestration** -- make best use of different storge locations including local storages, cloud providers and more,  
+* **Service Discovery and load balancing** -- balance load between multiple containers present in a cluster and expose your application using either DNS or customised IP address,  
+* **Storage orchestration** -- make best use of different storage locations including local storages, cloud providers and more,  
 * Automated rollouts and rollbacks -- specify a desired version of your application across each container and be able to easily change it anytime you want, on a chosen machine inside a cluster  
 * **Automatic bin packing** -- make the best use of your resources and customize the usage per cluster  
 * **Self-healing** -- do not worry about containers availability. K8s replaces failed and non-responding continers for you and periodically runs health checks  
@@ -46,11 +46,11 @@ Before continuing with the exercise, let's sum up what we have already learned a
 The great advantage is the dynamic configuration handled by the control plane (as _.yaml_ config files) so you'll never have to manually change any of the envoy proxies. The Istio's impact on the application can be visualized as shown in the image below.  
 ![Istio impact on an app](service-mesh.svg)  
 
-As part of this tutorial you can also slowly go through all of the below described steps in order to quickly set up a custom containarized flask application and Istio routing rules that work right out of the box. This way you can see how easy it is to manage traffic inside k8s container. The provided application answers to GET requests (<url>/hostname path) by returning a hostname of the node handling the particular request. That's an easy and efficient way to visualize traffic management concepts.
+As part of this tutorial you can also slowly go through all of the below described steps in order to quickly set up a custom containerized flask application and Istio routing rules that work right out of the box. This way you can see how easy it is to manage traffic inside k8s container. The provided application answers to GET requests (<url>/hostname path) by returning a hostname of the node handling the particular request. That's an easy and efficient way to visualize traffic management concepts.
 1. issue `minikube start` to start a cluster environment
 2. cd to tutorial/ directory
-3. issue ` eval $(minikube -p minikube docker-env)` to make use of a local k8s and docker registers
-4. issue `docker build -f Dockerfile -t tip-app:latest .` to contanarize provided flask application
+3. issue ` eval $(minikube -p minikube docker-env)` to make use of a local k8s and docker registry
+4. issue `docker build -f Dockerfile -t tip-app:latest .` to containerize provided flask application
 5. let's install Istio mesh inside minikube cluster --- issue `istioctl install --set profile=demo -y` followed by `kubectl label namespace default istio-injection=enabled` to perform the installation and automatically inject Istio traffic envoys to created pods.  
 6. issue `kubectl apply -f flask-deploy.yaml` to create pods with just built docker image
 7. to verify whether pods are running you can issue `kubectl get pods`. There should be no errors
@@ -72,7 +72,7 @@ The other DIY exercises are as follows:
 
 3. **Request Routing** --- you will have a cluster running different versions of your application. Based on various criteria specified later on you are going to implement rules that will change the way traffic is routed within you application. Some of the users will see version 1 of your app whereas the others will see different versions. 
 
-5. **Fault Injection** --- In this part of the exercise you are going to test whether you application is fault tolerant. You will use Istio's fault injection rules to introduce a delay to your application and find possible bugs and problems your customers may encounter. A healthy applciation means a happy customer!  
+5. **Fault Injection** --- In this part of the exercise you are going to test whether you application is fault tolerant. You will use Istio's fault injection rules to introduce a delay to your application and find possible bugs and problems your customers may encounter. A healthy application means a happy customer!  
 
 7. **Traffic Shifting** --- The last part of this laboratory session will give you tools to seemlessly migrate your application between versions (e.g sequentially deploy a new version of the app). With Istio you can do it without having to manually rebuild and reboot all your containers within the cluster. In order to do so you are going to use envoy sidecar implementation and a feature called weighted roouting. By specyfing an appropriate rule you will have a given percentage of users routed to a different version of your app. If it works, you can deploy it across the whole cluster. Perfect! 
 Now that you know everything, ready your command line and get to work!  

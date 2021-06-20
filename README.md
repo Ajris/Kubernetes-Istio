@@ -45,22 +45,26 @@ Before continuing with the exercise, let's sum up what we have already learned a
 
 The great advantage is the dynamic configuration handled by the control plane (as _.yaml_ config files) so you'll never have to manually change any of the envoy proxies. The Istio's impact on the application can be visualized as shown in the image below.  
 ![Istio impact on an app](service-mesh.svg)  
-As part of this tutorial you can also slowly go through all of the below described steps in order to quickly set up a custom containarized flask application and Istio routing rules that work right out of the box. This way you can see how easy it is to manage traffic inside k8s container. 
+
+As part of this tutorial you can also slowly go through all of the below described steps in order to quickly set up a custom containarized flask application and Istio routing rules that work right out of the box. This way you can see how easy it is to manage traffic inside k8s container. The provided application answers to GET requests (<url>/hostname path) by returning a hostname of the node handling the particular request. That's an easy and efficient way to visualize traffic management concepts.
 1. issue `minikube start` to start a cluster environment
 2. cd to tutorial/ directory
 3. issue ` eval $(minikube -p minikube docker-env)` to make use of a local k8s and docker registers
 4. issue `docker build -f Dockerfile -t tip-app:latest .` to contanarize provided flask application
-5. let's install Istio mesh inside minikube cluster --- issue `istioctl install --      set profile=demo -y` followed by `kubectl label           namespace default istio-injection=enabled` to perform the installation and automatically inject Istio traffic envoys to created pods.  
+5. let's install Istio mesh inside minikube cluster --- issue `istioctl install --set profile=demo -y` followed by `kubectl label namespace default istio-injection=enabled` to perform the installation and automatically inject Istio traffic envoys to created pods.  
 6. issue `kubectl apply -f flask-deploy.yaml` to create pods with just built docker image
 7. to verify whether pods are running you can issue `kubectl get pods`. There should be no errors
 8. in a new terminal window issue `minikube tunnel` in order to be able to access the flask app outside of the cluster, from your host machine 
 9. Let's set up an Istio gateway to redirect each request through the minikube tunnel. Type in your terminal `kubectl apply -f flask-gateway.yaml`
-10. The Flask applicatioon should be reachable now from your host machine. In order to perform a GET request issue below commands. The first one will return an IP address, the second one a port. Using them one can reach the app.  
-`export INGRESS_HOST=$(kubectl -n istio-system get service istio-ingressgateway -o jsonpath='{.status.loadBalancer.ingress[0].ip}')`
-`export INGRESS_PORT=$(kubectl -n istio-system get service istio-ingressgateway -o jsonpath='{.spec.ports[?(@.name=="http2")].port}')`
+10. verify all the performed steps by typing `istioctl analyze`. There should be no errors 
+11. The Flask applicatioon should be reachable now from your host machine. In order to perform a GET request issue below commands. The first one will return an IP address, the second one a port. Using them one can reach the app.  
+`export INGRESS_HOST=$(kubectl -n istio-system get service istio-ingressgateway -o jsonpath='{.status.loadBalancer.ingress[0].ip}')`  
+`export INGRESS_PORT=$(kubectl -n istio-system get service istio-ingressgateway -o jsonpath='{.spec.ports[?(@.name=="http2")].port}')`  
 Now you can issue `curl http://INGRESS_HOST:INGRESS_PORT/hostname` to perform a GET request to the Flask application. You can see that each time you perform a request, a different container responds. 
-11. Let's try to change that and route all requests only to the containers named flask1.*. Issue `kubectl apply -f flask-gateway100.yaml`. Try to do some requests now. Each response you get should come only from 2 out of 4 containers named flask1.*
-12. Issuing `kubectl apply -f flask-gateway50.yaml` will change the applicaton behaviour to handle traffic 50/50. Approximately 50% of request should be routed to conatiners named flask1.* and 50% of traffic to containers named flask2.*. 
+11. Let's try to change that and route all requests only to the containers named flask1.*. Set up decision rules that we will later use for traffic management --- issue `kubectl apply -f dest-rules.yaml`
+12.  With the rules all set up let's move all requests to flask1.* containers by typing `kubectl apply -f flask-gateway100.yaml`. Validate your actions with already introduced command `istioctl analyze`. Try to send some requests now. Each response received should come only from 2 out of 4 containers named flask1.*
+13. Issuing `kubectl apply -f flask-gateway50.yaml` will change the applicaton behaviour to handle traffic in a 50/50 way. Approximately 50% of requests should be routed to containers named flask1.* and 50% of traffic to containers named flask2.*. 
+14. All set up. You can play with the provided files or move right to the next exercises where you will be asked to write some rules yourself. 
 
 
 The other DIY exercises are as follows:  

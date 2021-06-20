@@ -1,0 +1,43 @@
+apiVersion: networking.istio.io/v1alpha3
+kind: Gateway
+metadata:
+  name: tip-gateway
+spec:
+  selector:
+    istio: ingressgateway # use istio default controller
+  servers:
+  - port:
+      number: 80
+      name: http
+      protocol: HTTP
+    hosts:
+    - "*"
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: flask-urls
+spec:
+  hosts:
+  - "*"
+  gateways:
+  - tip-gateway
+  http:
+  - match:
+    - uri:
+        exact: /hostname
+    - uri:
+        prefix: /static
+    route:
+    - destination:
+        host: flask-tip-k8s-svc
+        subset: flask1
+        port:
+          number: 6000
+      weight: 50
+    - destination:
+       host: flask-tip-k8s-svc
+       subset: flask2
+       port:
+         number: 6000
+      weight: 50

@@ -1,0 +1,13 @@
+apiVersion: networking.istio.io/v1alpha3
+kind: DestinationRule
+metadata:
+  name: flask-dst-rule
+spec:
+  host: flask-tip-k8s-svc
+  subsets:
+  - name: flask1
+    labels:
+      version: flask1
+  - name: flask2
+    labels:
+      version: flask2
